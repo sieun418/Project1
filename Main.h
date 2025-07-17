@@ -11,16 +11,13 @@
 #define MYSHIP_BASE_POSX    38  
 #define MYSHIP_BASE_POSY    23  
 
+
 #include <windows.h>
 #include <stdio.h>
 #include <conio.h>
 #include <wincon.h>
 #include "console.h"
 
-typedef struct{  
-	int flag;
-	UPOINT pos;  
-} MYSHIP;
 
 typedef struct{ 
 	int flag;
@@ -42,6 +39,8 @@ extern BULLET     myship_bullet[MAXMY_BULLET];
 extern BULLET     enemy_bullet[MAXENEMY_BULLET];
 extern ENEMYSHIP  enemyship[MAX_ENEMY];
 extern int        score,killnum;
+extern MYSHIP myship;
+
 
 void DrawMyship(UPOINT *pt,UPOINT*);
 void InitMyship();

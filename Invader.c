@@ -22,11 +22,13 @@ void main(void)
 	ptend.y = 12;
 	while(loop)
 	{
-		DWORD         thisTickCount = GetTickCount();
-	    DWORD         bcount = thisTickCount;
-		int           bp =0;
-        
-		play();  
+		InitMyship();  //  여기서 매번 초기화
+		play();
+
+		DWORD thisTickCount = GetTickCount();
+		DWORD bcount = thisTickCount;
+		int bp = 0;
+
 		
 		for(;;)   
 		{
@@ -56,13 +58,12 @@ void main(void)
 
 		if(_getch() == 'y') //초기화누락 버그
 		{
-			ClearScreen();  
-			bp=0;
-			killnum = 0;
+			ClearScreen();
 			score = 0;
+			killnum = 0;
 			timeflag = 0;
-			ptend.y  = 12;
-			loop = 1;       
+			ptend.y = 12;
+			loop = 1;
 		}
 		else
 			loop = 0;       		
@@ -79,8 +80,7 @@ void  play()
 	UPOINT        ptscore,pthi;
 	int           juckspeed=500;
 
-	InitConsole();    
-	InitMyship();     
+	InitConsole();      
 	Initenemyship();  
 	
 	ptthisMypos.x = ptMyoldpos.x = MYSHIP_BASE_POSX;
@@ -112,12 +112,7 @@ void  play()
 				   if (++ptthisMypos.x > 75) ptthisMypos.x = 75;
 				   DrawMyship(&ptthisMypos, &ptMyoldpos);
 				   break;
-			   case 72:  // ↑ : 총알 발사
-				   if (gthisTickCount - bulletcount > 500) {
-					   MyBulletshot(ptthisMypos);
-					   bulletcount = gthisTickCount;
-				   }
-				   break;
+			   
 			   }
 		   }
 		   else if (ch == ' ') {  // 스페이스바 입력 처리
@@ -132,15 +127,21 @@ void  play()
 	   if( gthisTickCount - Count > 150)
 	   {
 	
-		    if(CheckMybullet(ptthisMypos) == 0)            
+		   if (CheckMybullet(ptthisMypos) == 0)
 		   {
-			   if(score > 2000)
-				   hiscore = score;
-			   break;
+			   myship.hp--;  // 체력 감소
+
+			   if (myship.hp <= 0)
+			   {
+				   if (score > 2000)
+					   hiscore = score;
+				   break; // 게임 종료
+			   }
 		   }
 	       CheckenemyBullet(enemyship);                   
-		   DrawMyBullet();                                
-		   DrawMyship(&ptthisMypos , &ptMyoldpos);        
+		   ptMyoldpos = ptthisMypos;               // 항상 다시 그리도록!
+		   DrawMyBullet();
+		   DrawMyship(&ptthisMypos, &ptMyoldpos);
 		   gotoxy(ptscore);
 		   
 		   if(killnum < 40)
