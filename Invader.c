@@ -59,6 +59,7 @@ void main(void)
 			ClearScreen();  
 			bp=0;
 			killnum = 0;
+			score = 0;
 			timeflag = 0;
 			ptend.y  = 12;
 			loop = 1;       

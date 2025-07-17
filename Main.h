@@ -32,6 +32,12 @@ typedef struct{
 	UPOINT pos;
 } ENEMYSHIP;
 
+typedef struct {
+	int flag;
+	UPOINT pos;
+	int hp;       //  체력 추가
+} MYSHIP;
+
 extern BULLET     myship_bullet[MAXMY_BULLET];
 extern BULLET     enemy_bullet[MAXENEMY_BULLET];
 extern ENEMYSHIP  enemyship[MAX_ENEMY];

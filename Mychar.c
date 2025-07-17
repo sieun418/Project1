@@ -3,13 +3,21 @@
 MYSHIP  myship;
 BULLET myship_bullet[MAXMY_BULLET];
 
+int myship_hp = 3;
 char  myship_shape[10] = "-i^i-";
+
+char* myship_shape[] = {
+	"-i^i-",  // HP 3
+	"i^i-",   // HP 2
+	"i^i",    // HP 1
+};
 
 void InitMyship()
 {
 	myship.flag = TRUE;
 	myship.pos.x = MYSHIP_BASE_POSX;
 	myship.pos.y = MYSHIP_BASE_POSY;
+	myship.hp = 3; //  체력 초기화
 }
 
 
@@ -18,7 +26,7 @@ void DrawMyship(UPOINT *pt,UPOINT *oldpt)
 	gotoxy(*oldpt);
     printf("     ");
 	gotoxy(*pt);
-	printf("%s",myship_shape);
+	printf("%s", myship_shape[3 - myship.hp]);
 }
 
 
