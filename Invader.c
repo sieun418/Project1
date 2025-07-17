@@ -6,67 +6,49 @@ char   *Aboom[8];
    
 void main(void)
 {
-	srand((unsigned)time(NULL)); // rand:의사랜덤함수, srand로 seed설정
-	UPOINT        ptend;
-	int	loop = 1;
-	
-	Aboom[0] = "i<^>i";
-	Aboom[1] = "i(*)i";
-	Aboom[2] = "(* *)";
-	Aboom[3] = "(** **)";
-	Aboom[4] = " (* *) ";
-	Aboom[5] = "  (*)  ";
-	Aboom[6] = "   *   ";
-	Aboom[7] = "       ";
-	ptend.x = 36;
-	ptend.y = 12;
-	while(loop)
+	srand((unsigned)time(NULL)); // 시드 초기화
+
+	while (1)
 	{
-		InitMyship();  //  여기서 매번 초기화
-		play();
+		InitConsole();   // 콘솔 초기화
+		InitMyship();    // 비행기 상태 초기화
+		Initenemyship(); // 적 초기화
+		score = 0;
+		killnum = 0;
+		timeflag = FALSE;
 
-		DWORD thisTickCount = GetTickCount();
-		DWORD bcount = thisTickCount;
-		int bp = 0;
+		play();  // 1판 플레이 (죽거나 이길 때까지)
 
-		
-		for(;;)   
+		// 게임 오버 처리
+		UPOINT ptend = { 36, 12 };
+		char* Aboom[8] = {
+			"i<^>i", "i(*)i", "(* *)", "(** **)", " (* *) ", "  (*)  ", "   *   ", "       "
+		};
+		DWORD bcount = GetTickCount();
+		for (int bp = 0; bp < 8; )
 		{
-			if(timeflag == FALSE)
+			if (GetTickCount() - bcount > 100)
 			{
-				thisTickCount = GetTickCount();
-				 
-				if( thisTickCount - bcount > 100)
-				{
-					gotoxy(ptthisMypos);
-					printf("%s",Aboom[bp]);
-					bp++;
-					if(bp > 7)
-					   break;
-					bcount = thisTickCount;
-				}
+				gotoxy(ptthisMypos);
+				printf("%s", Aboom[bp++]);
+				bcount = GetTickCount();
 			}
-			else
-			 break;
 		}
-		
+
 		gotoxy(ptend);
 		printf("당신의 비행기는 파괴되었습니다.");
-		ptend.y +=1; 
+		ptend.y += 1;
 		gotoxy(ptend);
-		printf("다시 할까요? (y/n)\n");
+		printf("다시 할까요? (y/n)");
 
-		if(_getch() == 'y') //초기화누락 버그
-		{
-			ClearScreen();
-			score = 0;
-			killnum = 0;
-			timeflag = 0;
-			ptend.y = 12;
-			loop = 1;
-		}
-		else
-			loop = 0;       		
+		int ch;
+		do {
+			ch = _getch();
+		} while (ch != 'y' && ch != 'n');
+
+		if (ch == 'n') break;
+
+		ClearScreen();  // 화면만 지우고 루프 재진입
 	}
 }
 
@@ -130,6 +112,10 @@ void  play()
 		   if (CheckMybullet(ptthisMypos) == 0)
 		   {
 			   myship.hp--;  // 체력 감소
+
+			   // hp 변경 직후 바로 그려야 화면에 반영됨
+			   ptMyoldpos = ptthisMypos;
+			   DrawMyship(&ptthisMypos, &ptMyoldpos);
 
 			   if (myship.hp <= 0)
 			   {
