@@ -119,6 +119,12 @@ void  play()
 				   break;
 			   }
 		   }
+		   else if (ch == ' ') {  // 스페이스바 입력 처리
+			   if (gthisTickCount - bulletcount > 500) {
+				   MyBulletshot(ptthisMypos);
+				   bulletcount = gthisTickCount;
+			   }
+		   }
 	   }
 
   
